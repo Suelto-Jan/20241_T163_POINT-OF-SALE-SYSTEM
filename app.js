@@ -11,31 +11,57 @@ app.get('/', (req, res)=>{
     res.send('This is Landing Page')
 })
 
-///USER ///
+///USER  ROUTES///
+
 //Add USER
-app.post('/user',(req, res)=>{
+app.post('/Register',(req, res)=>{
      ///
 })
 //Add USER
-app.get('/user',(req, res)=>{
+app.post('/login',(req, res)=>{
+      ///
+})
+//Add USER
+app.get('/profile',(req, res)=>{
     ///
 })
 //Add USER
-app.get('/user',(req, res)=>{
+app.get('/user/:userId',(req, res)=>{
     ///
 })
 //Add USER
-app.get('/user',(req, res)=>{
+app.post('/scan',(req, res)=>{
     ///
 })
 //Add USER
-app.patch('/user',(req, res)=>{
+app.post('/payment',(req, res)=>{
     ///
 })
-//Add USER
-app.delete('/user',(req, res)=>{
+
+
+
+
+
+///ADMIN ROUTES///
+
+app.post('/admin/login',(req, res)=>{
     ///
 })
+app.post('/admin/products',(req, res)=>{
+    ///
+})
+app.put('/admin/products/productId',(req, res)=>{
+    ///
+})
+app.delete('/admin/products/prodcutId',(req, res)=>{
+    ///
+})
+app.get('/admin/products',(req, res)=>{
+    ///
+})
+
+
+
 
 
 app.listen(3000)
