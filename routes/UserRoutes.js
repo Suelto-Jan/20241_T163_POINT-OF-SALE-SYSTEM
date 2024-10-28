@@ -65,3 +65,5 @@ userRoutes.post('/payment', (req, res) => {
     // Process payment
     res.status(200).json({ message: 'Payment processed successfully', paymentDetails: paymentInfo });
 });
+userRoutes.get("/", getAll);
+module.exports = userRoutes;
