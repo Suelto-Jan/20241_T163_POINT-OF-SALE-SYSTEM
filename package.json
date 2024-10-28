@@ -1,0 +1,16 @@
+{
+  "name": "20241_t163_point-of-sale-system",
+  "version": "1.0.0",
+  "description": "T163\r POINT OF SALE SYSTEM\r Description: This POS system is to provide the admin a  developing efficient sales processing, inventory management, and customer engagement features, along with necessary hardware, documentation, and training, while ensuring integration with existing systems and adhering to budget and timeline constraints.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1",
+    "nodemon": "^3.1.7"
+  }
+}
