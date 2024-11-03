@@ -1,0 +1,93 @@
+.Button {
+    background-color: white;  /* Base background color */
+    border-radius: 8px;      /* Slightly larger radius for a softer look */
+    cursor: pointer;          /* Pointer cursor on hover */
+    border: 1px solid #ddd;   /* Light border */
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;  /* Smooth transitions */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);  /* Soft shadow for depth */
+    height: 50px;             /* Fixed height */
+    width: 100px;             /* Fixed width */
+    font-weight: bold;        /* Bold text for emphasis */
+    font-size: 1em;          /* Font size */
+    color: #333;              /* Text color */
+    position: relative;       /* For potential pseudo-element usage */
+}
+
+.Button:hover {
+    background-color: #f0f0f0;  /* Light background change on hover */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.25);  /* Deeper shadow on hover */
+    transform: translateY(-3px);  /* Slight lift effect */
+}
+
+.Button:active {
+    background-color: #e0e0e0;  /* Darker background on click */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);  /* Return shadow to original */
+    transform: translateY(1px);  /* Slight press down effect */
+}
+
+.Button:focus {
+    outline: 2px solid #8e94fb;  /* Outline for accessibility */
+    outline-offset: 4px;         /* Space between outline and button */
+}
+
+/* Optional: Add a subtle pulse effect on hover */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);   /* Slightly larger during pulse */
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.Button:hover {
+    animation: pulse 0.6s ease-in-out;  /* Apply pulse effect on hover */
+}
+.Main{
+    position: relative;
+    text-align: center;
+    background-image: url(../Images/pci.jpg);
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    
+}
+.BSU{
+    font-size: 2em;
+    font-weight: bold;
+}
+.COT{
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.img{
+    height: 150px; 
+}
+.style1{
+    z-index: 2; 
+    display: "flex"; 
+    flex-direction: "column"; 
+    align-items: "center";
+}
+
+.blurred{
+    position: "absolute";
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(244, 194, 194, 0.8);
+    z-index: 1;
+}
+.Cancel{
+    margin-top: "10px";
+    padding: "5px 10px";
+    font-size: "12px";
+}
