@@ -49,7 +49,7 @@
 .Main{
     position: relative;
     text-align: center;
-    background-image: url(../Images/pci.jpg);
+    background-image: url(./Images/pci.jpg);
     background-size: cover;
     background-position: center;
     height: 100vh;

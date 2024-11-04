@@ -1,10 +1,9 @@
 import React from "react";
-import "../Client/LoginSelectionPage"
 import { useNavigate } from "react-router-dom";
-import bsuLogo from "../Images/BSU LOGO.png";
-import userImage from "../Images/UserProfile.jpg";
-import backgroundImage from "../Images/pci.jpg";
-import cotlogo from "../Images/COT.png";
+import bsuLogo from "./Images/BSU LOGO.png";
+import userImage from "./Images/UserProfile.jpg";
+import backgroundImage from "./Images/pci.jpg";
+import cotlogo from "./Images/COT.png";
 
 const users = [
   { name: "Aliah", image: "https://via.placeholder.com/100" },

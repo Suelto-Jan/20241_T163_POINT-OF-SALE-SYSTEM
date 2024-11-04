@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import bsuLogo from "../Images/busku.png"; 
-import profileImage from "../Images/UserProfile.jpg";
-import backgroundImage from "../Images/pci.jpg"; // Background image
+import bsuLogo from "./Images/busku.png"; 
+import profileImage from "./Images/UserProfile.jpg";
+import backgroundImage from "./Images/pci.jpg"; // Background image
 
 // Styled components
 const Container = styled.div`

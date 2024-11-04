@@ -2,11 +2,11 @@
 import './App.css';
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import HomePage from "./Client/HomePage";
-import RegistrationPage from "./Client/RegistrationPage";
-import LoginPage from "./Client/LoginPage";
-import LoginSelectionPage from "./Client/LoginSelectionPage";
-import ScanPage from "./Client/ScanPage";
+import HomePage from "./HomePage";
+import RegistrationPage from "./RegistrationPage";
+import LoginPage from "./LoginPage";
+import LoginSelectionPage from "./LoginSelectionPage";
+import ScanPage from "./ScanPage";
 
 
 function App() {

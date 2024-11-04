@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "../Client/HomePage.css";
-import buksuLogo from "../Images/BSU LOGO.png";
-import collegeLogo from "../Images/COT.png";
+import "./HomePage.css";
+import buksuLogo from "./Images/BSU LOGO.png";
+import collegeLogo from "./Images/COT.png";
 
 function HomePage() {
   const [showLoginModal, setShowLoginModal] = useState(false);

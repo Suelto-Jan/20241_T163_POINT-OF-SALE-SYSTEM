@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import ReCAPTCHA from "react-google-recaptcha";
-import userImage from "../Images/UserProfile.jpg"; // Replace with the actual path
-import logoImage from "../Images/COT.png"; // Replace with the actual path
-import backgroundImage from "../Images/pci.jpg"; // Replace with your background path
+import userImage from "./Images/UserProfile.jpg"; // Replace with the actual path
+import logoImage from "./Images/COT.png"; // Replace with the actual path
+import backgroundImage from "./Images/pci.jpg"; // Replace with your background path
 
 // Styled components
 const PageContainer = styled.div`

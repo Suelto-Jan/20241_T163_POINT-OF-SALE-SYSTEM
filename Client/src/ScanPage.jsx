@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import userImage from "../Images/UserProfile.jpg";
-import backgroundImage from "../Images/pci.jpg";
+import userImage from "./Images/UserProfile.jpg";
+import backgroundImage from "./Images/pci.jpg";
 
 // Styled components setup
 const PageContainer = styled.div`
