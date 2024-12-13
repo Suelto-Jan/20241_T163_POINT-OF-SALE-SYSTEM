@@ -1,0 +1,135 @@
+.pageWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+}
+
+.formWrapper {
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+}
+
+.heading {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.inputGroup {
+  margin-bottom: 20px;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.pinGroup {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.pinInput {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: 20px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin: 0 5px;
+}
+
+.pinInput:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.recaptchaWrapper {
+  margin-bottom: 20px;
+}
+
+.btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.googleAuth {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.googleBtn {
+  background-color: #4285f4;
+  color: white;
+  padding: 12px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.googleIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.errorMessage, .successMessage {
+  color: #e74c3c;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.successMessage {
+  color: #2ecc71;
+}
+
+.loginPrompt {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.backBtn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.backBtn:hover {
+  text-decoration: underline;
+}

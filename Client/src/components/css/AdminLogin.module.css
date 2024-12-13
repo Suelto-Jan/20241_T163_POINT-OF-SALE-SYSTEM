@@ -1,0 +1,107 @@
+/* AdminLogin.module.css */
+
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f4f4f4; /* Match homepage */
+  font-family: Arial, sans-serif;
+  color: #2c3e50; /* Text color */
+}
+
+.btnBack {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: transparent;
+  border: none;
+  color: #2c3e50;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.loginBox {
+  background-color: #ffffff;
+  max-width: 400px;
+  width: 90%;
+  margin: auto;
+  margin-top: 100px;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.logoContainer {
+  margin-bottom: 20px;
+}
+
+.logos {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.logoImg {
+  width: 80px;
+  height: auto;
+}
+
+.universityName {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.collegeName {
+  font-size: 1rem;
+  color: #7f8c8d;
+}
+
+.title {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.alert {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.alertDanger {
+  background-color: #e74c3c;
+  color: #ffffff;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 10px;
+  color: #fff;
+  background-color: #3498db;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submitButton:hover {
+  background-color: #2980b9;
+}
