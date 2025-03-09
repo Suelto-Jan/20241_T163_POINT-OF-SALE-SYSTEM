@@ -1,20 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  TextField,
-  Typography,
-  Modal,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  InputAdornment,
-  Snackbar,
-} from "@mui/material";
+import {Box,Button,Card,CardContent,Grid,TextField,Typography,Modal,Select,MenuItem,InputLabel,FormControl,InputAdornment,Snackbar,} from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
 import axios from "axios";
 
@@ -73,7 +58,6 @@ function ProductList() {
       setImage(file);
       console.log("Selected file:", file);  // This should print the file object
     } else {
-      setImage(null);
     }
   };
   
@@ -85,7 +69,7 @@ function ProductList() {
         ? { ...product }
         : { name: "", price: "", quantity: "", barcode: "", category: "" , image: ""}
     );
-    setImage(null);
+   
     setIsModalOpen(true);
   };
 
@@ -93,7 +77,6 @@ function ProductList() {
     setIsModalOpen(false);
     setSelectedProduct(null);
     setFormValues({ name: "", price: "", quantity: "", barcode: "", category: "", image: "" });
-    setImage(null);
     document.querySelector('input[type="file"]').value = '';
   };
 
@@ -105,8 +88,8 @@ function ProductList() {
       return;
     }
   
-    // Check if image is selected
-    if (!image) {
+    // Check if an image is required (only for new products or if the image is updated)
+    if (!image && !selectedProduct) {
       setSnackbarMessage("Please upload an image.");
       setSnackbarOpen(true);
       return;
@@ -119,15 +102,9 @@ function ProductList() {
       formData.append(key, formValues[key]);
     });
   
-    // Ensure image is appended
-    console.log('FormData before appending image:', formData);
+    // Ensure image is appended only if it is updated
     if (image && image instanceof File) {
       formData.append("image", image);
-      console.log('Appended image:', image);  // Log the image to confirm it's added
-    } else {
-      setSnackbarMessage("Invalid image file.");
-      setSnackbarOpen(true);
-      return;
     }
   
     // Make the POST request
@@ -136,6 +113,7 @@ function ProductList() {
   
       // Check if the form is editing an existing product
       if (selectedProduct) {
+        // When editing, you can avoid checking the image unless it was updated
         productResponse = await axios.put(
           `${API_BASE_URL}/products/${selectedProduct._id}`,
           formData,
@@ -161,10 +139,6 @@ function ProductList() {
     }
   };
   
-   
-  
-
-
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
   };
@@ -237,34 +211,49 @@ function ProductList() {
       <Grid container spacing={2} sx={{ marginTop: "20px" }}>
         {products.map((product) => (
           <Grid item xs={12} sm={6} md={4} key={product._id}>
-            <Card elevation={0}>
-              <CardContent sx={{ padding: "20px" }}>
-                <Box sx={{ width: "100%", height: "180px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", borderRadius: "8px" }}>
-                  <img
-                    src={product.image ? `http://localhost:8000/${product.image}` : '/path/to/default-image.jpg'}
-                    alt={product.name}
-                    style={{ width: "100%", height: "auto", objectFit: "cover" }}
-                  />
-                </Box>
-                <Typography variant="h6" sx={{ marginTop: "10px", fontWeight: "bold", fontSize: "16px" }}>
-                  {product.name}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" sx={{ fontSize: "14px" }}>
-                  Price: ₱{product.price}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" sx={{ fontSize: "14px" }}>
-                  Available Quantity: {product.quantity}
-                </Typography>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  sx={{ marginTop: "15px" }}
-                  onClick={() => handleOpenModal(product)}
-                >
-                  Edit
-                </Button>
-              </CardContent>
-            </Card>
+           <Card elevation={0}>
+  <CardContent sx={{ padding: "20px" }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "180px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+        borderRadius: "8px",
+      }}
+    >
+      <img
+        src={product.image ? `http://localhost:8000/${product.image}` : '/path/to/default-image.jpg'}
+        alt={product.name}
+        style={{
+          width: "100%",
+          height: "100%",  // Make sure the image fills the container fully without cut-off
+          objectFit: "contain",  // This ensures the image will scale to fit without being cropped
+        }}
+      />
+    </Box>
+    <Typography variant="h6" sx={{ marginTop: "10px", fontWeight: "bold", fontSize: "16px" }}>
+      {product.name}
+    </Typography>
+    <Typography variant="body2" color="textSecondary" sx={{ fontSize: "14px" }}>
+      Price: ₱{product.price}
+    </Typography>
+    <Typography variant="body2" color="textSecondary" sx={{ fontSize: "14px" }}>
+      Available Quantity: {product.quantity}
+    </Typography>
+    <Button
+      variant="outlined"
+      color="primary"
+      sx={{ marginTop: "15px" }}
+      onClick={() => handleOpenModal(product)}
+    >
+      Edit
+    </Button>
+  </CardContent>
+</Card>
+
           </Grid>
         ))}
       </Grid>

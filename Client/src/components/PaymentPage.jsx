@@ -1,28 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {
-  Layout,
-  Card,
-  Typography,
-  Button,
-  InputNumber,
-  Radio,
-  Modal,
-  Image,
-  Divider,
-  Space,
-  Row,
-  Col,
-  message,
-  Spin,
-} from 'antd';
-import {
-  ShoppingCartOutlined,
-  DollarCircleOutlined,
-  LeftOutlined,
-  ExclamationCircleOutlined,
-} from '@ant-design/icons';
+import {Layout,Card,Typography,Button,InputNumber,Radio,Modal,Image,Divider,Space, Row,Col,message,Spin} from 'antd';
+import {ShoppingCartOutlined,DollarCircleOutlined,LeftOutlined, ExclamationCircleOutlined,} from '@ant-design/icons';
 
 const { Content } = Layout;
 
@@ -46,7 +26,7 @@ function PaymentPage() {
     const storedUser = localStorage.getItem('user');
 
     if (!fetchedProduct) {
-      navigate('/');
+      navigate('/login-selection');
       return;
     }
 
@@ -132,7 +112,7 @@ function PaymentPage() {
       console.log('Transaction created successfully:', data);
   
       // Optionally, display a success message
-      message.success('Payment Successful!');
+      message.success('Payment Successful! Please Wait!');
   
       // Return the transaction data for further processing if needed
       return data;
@@ -144,7 +124,7 @@ function PaymentPage() {
       return null;
     }
   };
-  
+
   if (!product) {
     return <div>No product selected from the ad.</div>;
   }

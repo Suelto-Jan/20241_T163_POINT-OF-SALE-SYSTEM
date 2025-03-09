@@ -84,7 +84,13 @@ function LoginSelectionPage() {
       setResetError('Please enter a valid email address.');
       return;
     }
-
+  
+    // Check if the entered email matches the selected user's email
+    if (email !== selectedUser.email) {
+      setResetError('Email does not match the selected user.');
+      return;
+    }
+  
     try {
       const response = await fetch('http://localhost:8000/api/forgot-pin', {
         method: 'POST',
@@ -93,17 +99,18 @@ function LoginSelectionPage() {
         },
         body: JSON.stringify({ email: selectedUser.email }),
       });
-
+  
       if (!response.ok) {
         throw new Error('Something went wrong');
       }
-
+  
       setSnackbarMessage('Reset link sent to your email!');
     } catch (error) {
       setResetError('There was an issue resetting the PIN.');
       setSnackbarMessage('Error resetting PIN.');
     }
   };
+  
 
   const closeModal = () => {
     setSelectedUser(null);
@@ -128,7 +135,7 @@ function LoginSelectionPage() {
       </div>
 
       {loading && <p className={styles.loadingMessage}>Loading users...</p>}
-      {error && <p className={styles.errorMessage}>{error}</p>}
+      
 
 
       {!loading && !error && (

@@ -8,10 +8,9 @@ import {
   Typography,
   Card,
   CardContent,
-  CardActions,
-  Grid,
   Snackbar,
   Alert,
+  Grid,
 } from "@mui/material";
 
 function AdminProfile() {
@@ -28,28 +27,40 @@ function AdminProfile() {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // Fetch admin data when component mounts
   useEffect(() => {
     const fetchAdminData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/admin");
-        setAdmin(response.data);
-        setFormData({
-          firstname: response.data.firstname,
-          lastname: response.data.lastname,
-          email: response.data.email,
-          pin: "",
+        const token = localStorage.getItem("token");  // Use "token" instead of "authToken"
+        console.log("Token from localStorage:", token);  // Log token
+  
+        if (!token) {
+          setErrorMessage("Authentication token not found. Please log in.");
+          setLoading(false);
+          return;
+        }
+  
+        const response = await axios.get("http://localhost:8000/api/admin/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
         });
-        setImagePreview(
-          response.data.image ? `http://localhost:8000/${response.data.image}` : null
-        );
+  
+        console.log("API Response:", response);  // Log the whole response
+  
+        if (response && response.data) {
+          setAdmin(response.data);  // Set the admin data if available
+        } else {
+          setErrorMessage("Failed to fetch admin data.");
+        }
       } catch (err) {
+        console.error("Error fetching admin data:", err);
         setErrorMessage("Failed to fetch admin data.");
-        console.error("Failed to fetch admin data:", err);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchAdminData();
   }, []);
 
@@ -74,8 +85,12 @@ function AdminProfile() {
     if (formData.image) form.append("image", formData.image);
 
     try {
+      const token = localStorage.getItem("token");
       await axios.put("http://localhost:8000/api/admin", form, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       });
       setSuccessMessage("Profile updated successfully!");
     } catch (err) {
@@ -85,6 +100,10 @@ function AdminProfile() {
   };
 
   if (loading) return <Typography>Loading...</Typography>;
+
+  if (!admin) {
+    return <Typography>Admin data not available</Typography>;
+  }
 
   return (
     <Box
@@ -104,12 +123,13 @@ function AdminProfile() {
           boxShadow: "0px 8px 20px rgba(0,0,0,0.1)",
           borderRadius: "16px",
           backgroundColor: "#fff",
+          padding: 3,
         }}
       >
         <CardContent>
           <Box display="flex" justifyContent="center" marginBottom={3}>
             <Avatar
-              src={imagePreview || `http://localhost:8000/${admin.image}`}
+              src={imagePreview}
               alt="Admin Profile"
               sx={{
                 width: 120,
@@ -124,7 +144,7 @@ function AdminProfile() {
             align="center"
             fontWeight="bold"
             gutterBottom
-            sx={{ color: "#333" }}
+            sx={{ color: "#333", marginBottom: 2 }}
           >
             {admin.firstname} {admin.lastname}
           </Typography>
@@ -173,18 +193,33 @@ function AdminProfile() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  label="PIN"
-                  name="pin"
-                  type="password"
-                  value={formData.pin}
-                  onChange={handleInputChange}
-                  fullWidth
-                  size="small"
-                  inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                  sx={{ backgroundColor: "#fff" }}
-                />
-              </Grid>
+  <TextField
+    label="PIN"
+    name="pin"
+    type="password"
+    value={formData.pin}
+    onChange={(e) => {
+      if (e.target.value.length <= 6) {
+        setFormData((prev) => ({ ...prev, pin: e.target.value }));
+      }
+    }}
+    onKeyPress={(e) => {
+      if (!/^[0-9]$/.test(e.key)) {
+        e.preventDefault(); // Prevent non-numeric keys
+      }
+    }}
+    fullWidth
+    size="small"
+    inputProps={{
+      maxLength: 6, // Sets the maximum input length
+      inputMode: "numeric", // Ensures the numeric keyboard appears on mobile devices
+      pattern: "[0-9]*", // Regex pattern to enforce numeric input in certain browsers
+    }}
+    sx={{ backgroundColor: "#fff" }}
+  />
+</Grid>
+
+
             </Grid>
 
             <Button
@@ -212,8 +247,8 @@ function AdminProfile() {
                   sx={{
                     width: 80,
                     height: 80,
+                    borderRadius: "50%",
                     margin: "auto",
-                    border: "2px solid #4b6cb7",
                   }}
                 />
               </Box>
@@ -225,38 +260,31 @@ function AdminProfile() {
               fullWidth
               sx={{
                 backgroundColor: "#4b6cb7",
-                color: "white",
+                color: "#fff",
                 textTransform: "none",
-                fontWeight: "bold",
-                "&:hover": { backgroundColor: "#3b5ba7" },
+                "&:hover": { backgroundColor: "#355b87" },
               }}
             >
               Save Changes
             </Button>
           </form>
         </CardContent>
-
       </Card>
 
-      <Snackbar
-        open={Boolean(successMessage)}
-        autoHideDuration={4000}
-        onClose={() => setSuccessMessage("")}
-      >
-        <Alert severity="success" onClose={() => setSuccessMessage("")}>
-          {successMessage}
-        </Alert>
-      </Snackbar>
-
-      <Snackbar
-        open={Boolean(errorMessage)}
-        autoHideDuration={4000}
-        onClose={() => setErrorMessage("")}
-      >
-        <Alert severity="error" onClose={() => setErrorMessage("")}>
-          {errorMessage}
-        </Alert>
-      </Snackbar>
+      {successMessage && (
+        <Snackbar open autoHideDuration={3000} onClose={() => setSuccessMessage("")}>
+          <Alert severity="success" sx={{ width: "100%" }}>
+            {successMessage}
+          </Alert>
+        </Snackbar>
+      )}
+      {errorMessage && (
+        <Snackbar open autoHideDuration={3000} onClose={() => setErrorMessage("")}>
+          <Alert severity="error" sx={{ width: "100%" }}>
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+      )}
     </Box>
   );
 }

@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import axios from "axios"; // Import axios for making HTTP requests
+import axios from "axios";
 import bsuLogo from "../images/BSU LOGO.png";
 import cotLogo from "../images/COT.png";
 
@@ -56,47 +56,54 @@ const AdminLoginPage = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!email || !pin) {
       setErrorMessage("Please enter both email and PIN.");
       return;
     }
-
-    // Validate PIN length
+  
     if (pin.length !== 6) {
       setErrorMessage("PIN must be a 6-digit number.");
       return;
     }
-
+  
     try {
       const response = await axios.post("http://localhost:8000/api/admin/login", {
         email,
         pin,
       });
-
+  
+      console.log(response.data); // Check if the token is being returned in the response.
+  
       if (response.status === 200) {
-        // On successful login, store the token in localStorage
+       
+       console.log(localStorage.getItem("token")); // Check if token is set
+
+        // Store the new token and admin data
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem("adminData", JSON.stringify(response.data.admin));
+  
         // Navigate to the dashboard
         navigate("/dashboard");
       } else {
-        // Handle errors from backend response
         setErrorMessage(response.data.message || "Invalid login credentials.");
       }
     } catch (error) {
       console.error("Login failed:", error);
       if (error.response) {
-        // This is the response from the server (i.e., error status)
-        setErrorMessage(error.response.data.message || "Invalid login credentials.");
+        if (error.response.status === 401) {
+          setErrorMessage("Unauthorized access. Admin privileges required.");
+        } else {
+          setErrorMessage(error.response.data.message || "Invalid login credentials.");
+        }
       } else if (error.request) {
-        // This is if no response was received
         setErrorMessage("Server did not respond. Please try again.");
       } else {
-        // Any other errors
         setErrorMessage("An unexpected error occurred.");
       }
     }
   };
+  
 
   return (
     <ThemeProvider theme={theme}>
@@ -218,7 +225,7 @@ const AdminLoginPage = () => {
               />
               <TextField
                 label="PIN"
-                type="password" // Mask input like a password (dots/asterisks)
+                type="password"
                 variant="outlined"
                 fullWidth
                 value={pin}

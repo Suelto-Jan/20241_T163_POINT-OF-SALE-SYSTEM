@@ -1,6 +1,5 @@
 import express from 'express';
 import passport from '../Services/passport.js';
-import { register, verifyEmail} from '../Controller/authController.js';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import authenticateToken from '../Middleware/authenticate.js';
@@ -49,7 +48,7 @@ router.get("/login/failed", (req, res) => {
 });
 
 // Google login callback route
-router.get('/google/callback', passport.authenticate('google', {
+router.get('/google/callback', passport.authenticate('google', {  
   failureRedirect: 'http://localhost:3000/register', // Redirect on failure
 }), async (req, res) => {
   try {
@@ -83,11 +82,6 @@ router.get("/logout", (req, res) => {
   });
 });
 
-// Registration route
-router.post('/register', register);  // Handle registration
-
-// Email verification route
-router.get('/verify-email', verifyEmail);
 
 router.get('/protected', authenticateToken, (req, res) => {
   res.status(200).json({ message: 'Welcome to the protected route', user: req.user });

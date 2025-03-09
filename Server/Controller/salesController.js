@@ -6,7 +6,14 @@ import mongoose from 'mongoose';
 export const getTotalSalesDetails = async (req, res) => {
   try {
     const { date } = req.query; // Get the date from query params
-    const selectedDate = date ? new Date(date) : new Date();
+    let selectedDate = date ? new Date(date) : new Date();
+
+    // Validate the date format
+    if (isNaN(selectedDate)) {
+      return res.status(400).json({
+        message: 'Invalid date format. Please provide a valid date.',
+      });
+    }
 
     console.log('Fetching total sales details for:', selectedDate);
 
@@ -93,8 +100,7 @@ export const getTotalSalesDetails = async (req, res) => {
         },
       },
     ]);
-    
-    
+
     console.log('Sales Data:', salesData); // Log the result
 
     // Extracting results from aggregation
@@ -111,9 +117,13 @@ export const getTotalSalesDetails = async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching sales details:', error);
-    res.status(500).json({ message: 'Failed to fetch sales details', error: error.message });
+    res.status(500).json({
+      message: 'Failed to fetch sales details',
+      error: error.message,
+    });
   }
 };
+
 
 
 

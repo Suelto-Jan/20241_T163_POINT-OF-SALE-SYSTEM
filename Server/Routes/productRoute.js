@@ -9,7 +9,7 @@ import {
   getProductByBarcode,
   decrementProductQuantity,
   deleteAllProducts 
-} from '../Controller/productsControoler.js'; // Fix the controller import path
+} from '../Controller/productsController.js'; // Fix the controller import path
 
 const router = express.Router();
 

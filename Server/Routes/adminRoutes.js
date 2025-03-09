@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { getAdminProfile, updateAdminProfile, deleteAdmin ,adminLogin } from '../Controller/adminController.js';
+import { getAdminProfile, updateAdminProfile, deleteAdmin ,adminLogin ,verifyAdminToken} from '../Controller/adminController.js';
 import authenticateToken from '../Middleware/authenticate.js';
 
 const router = express.Router();
@@ -17,8 +17,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Admin routes
-router.get('/admin', getAdminProfile); // Fetch admin profile
-router.put('/admin', upload.single('image'), updateAdminProfile); // Update admin profile
+router.get('/admin/profile', verifyAdminToken, getAdminProfile); 
+router.put('/admin', upload.single('image'), verifyAdminToken,updateAdminProfile);
 router.delete('/admin', deleteAdmin); // Delete admin account (optional)
 router.post('/admin/login', adminLogin);
 router.get('/admin/token', authenticateToken, (req, res) => {

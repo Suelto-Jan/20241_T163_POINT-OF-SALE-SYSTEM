@@ -1,6 +1,7 @@
 import Product from '../Models/product.js';
 import path from 'path';
 import multer from 'multer';
+import mongoose from 'mongoose';
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -123,22 +124,70 @@ export const getProductByBarcode = async (req, res) => {
 };
 
 // Update product by ID
+// Assuming the model file is named this way
+
 export const updateProduct = async (req, res) => {
   try {
-    const updatedProductData = { ...req.body };
+    const productId = req.params.id;
+    const adminId = req.body.adminId; // Admin making the request
+    const lockDuration = 5 * 60 * 1000; // Lock for 5 minutes
 
-    if (req.file) {
-      updatedProductData.image = path.join('products', req.file.filename);  // Fix image path
+    // Find the product
+    const product = await Product.findById(productId);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+
+    // Debugging: Log the product's lock status
+    console.log('Product Lock Status:', product.lockedBy, product.lockedUntil);
+
+    // Check if the product is locked
+    if (product.lockedUntil && new Date(product.lockedUntil) > new Date()) {
+      // If locked, check if the admin trying to update is the one who locked it
+      if (product.lockedBy !== adminId) {
+        return res.status(403).json({
+          message: `Product is currently locked by another admin until ${new Date(
+            product.lockedUntil
+          ).toLocaleTimeString()}. Please try again later.`,
+        });
+      }
     }
 
-    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, updatedProductData, { new: true });
+    // Lock the product (if not already locked or the admin who locked it is updating)
+    product.lockedBy = adminId;
+    product.lockedUntil = new Date(Date.now() + lockDuration); // Set lock expiration time
+    await product.save();
 
-    if (!updatedProduct) return res.status(404).json({ message: 'Product not found' });
-    res.status(200).json({ message: 'Product updated successfully!', product: updatedProduct });
+    // Update product data
+    const updatedProductData = { ...req.body };
+    if (req.file) {
+      updatedProductData.image = path.join('products', req.file.filename); // Update image path
+    }
+
+    // Debugging: Log the updated product data
+    console.log('Updated Product Data:', updatedProductData);
+
+    // Update the product
+    const updatedProduct = await Product.findByIdAndUpdate(productId, updatedProductData, {
+      new: true,
+    });
+
+    if (!updatedProduct) return res.status(404).json({ message: 'Failed to update product.' });
+
+    // Unlock the product after update
+    updatedProduct.lockedBy = null; // Remove the lock after the update
+    updatedProduct.lockedUntil = null; // Set lockedUntil back to null
+    await updatedProduct.save();
+
+    res.status(200).json({
+      message: 'Product updated successfully!',
+      product: updatedProduct,
+    });
   } catch (error) {
+    console.error('Error updating product:', error);
     res.status(500).json({ message: `Error updating product: ${error.message}` });
   }
 };
+
+
 
 // Delete product by ID
 export const deleteProduct = async (req, res) => {

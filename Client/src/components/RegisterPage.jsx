@@ -48,11 +48,13 @@ function RegisterPage() {
     const pin = formData.pin.join("");
     const confirmPin = formData.confirmPin.join("");
 
+    // Validate pin and confirm pin match
     if (pin !== confirmPin) {
       setError("Pins do not match. Please try again.");
       return;
     }
 
+    // Validate reCAPTCHA
     if (!recaptchaToken) {
       setError("Please complete the reCAPTCHA verification.");
       return;
@@ -70,13 +72,15 @@ function RegisterPage() {
       const response = await axios.post(`http://localhost:8000/api/register`, formDataToSend, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      console.log("reCAPTCHA token (client):", recaptchaToken);
 
-      await addAd(response.data.userId);
       setLoading(false);
       setMessage(response.data.message);
       setRecaptchaToken(null);
 
-      setTimeout(() => navigate("/login-selection"), 3000);
+      // Redirect after successful registration
+      setTimeout(() => navigate("/login-selection"), 10000); // 15 seconds delay
+
     } catch (error) {
       setLoading(false);
       setError(error.response?.data?.message || "Error during registration. Please try again.");
@@ -93,7 +97,6 @@ function RegisterPage() {
     }
   };
 
-
   return (
     <div className={styles.pageWrapper}>
       <button className={styles.backBtn} onClick={() => navigate("/")}>
@@ -104,35 +107,44 @@ function RegisterPage() {
         <form onSubmit={handleSubmit} className={styles.form}>
           <h2 className={styles.heading}>Register</h2>
 
-          {/* Input Fields */}
+          {/* Input Fields with Icons */}
           <div className={styles.inputGroup}>
-            <input
-              type="text"
-              name="firstname"
-              value={formData.firstname}
-              onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
-              className={styles.input}
-              placeholder="Firstname"
-              required
-            />
-            <input
-              type="text"
-              name="lastname"
-              value={formData.lastname}
-              onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
-              className={styles.input}
-              placeholder="Lastname"
-              required
-            />
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className={styles.input}
-              placeholder="Email"
-              required
-            />
+            <div className={styles.inputWrapper}>
+              <i className="fas fa-user"></i>
+              <input
+                type="text"
+                name="firstname"
+                value={formData.firstname}
+                onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
+                className={styles.input}
+                placeholder="Firstname"
+                required
+              />
+            </div>
+            <div className={styles.inputWrapper}>
+              <i className="fas fa-user"></i>
+              <input
+                type="text"
+                name="lastname"
+                value={formData.lastname}
+                onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
+                className={styles.input}
+                placeholder="Lastname"
+                required
+              />
+            </div>
+            <div className={styles.inputWrapper}>
+              <i className="fas fa-envelope"></i>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className={styles.input}
+                placeholder="Email"
+                required
+              />
+            </div>
           </div>
 
           {/* Pin Inputs */}

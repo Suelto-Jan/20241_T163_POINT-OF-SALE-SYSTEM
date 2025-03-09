@@ -30,33 +30,39 @@ function Dashboard() {
   useEffect(() => {
     const fetchAdminData = async () => {
       const token = localStorage.getItem("token");
-
+    
       if (!token) {
         navigate("/"); // Redirect to login if no token is found
         return;
       }
-
+    
       try {
-        // Set token in Authorization header for admin API call
-        const response = await axios.get("http://localhost:8000/api/admin", {
+        const response = await axios.get("http://localhost:8000/api/admin/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setAdmin(response.data);
-        setLoading(false);
+    
+        // Ensure response.data contains the correct admin details
+        console.log("Admin data received:", response.data);
+    
+        // Make sure you are correctly updating the state with the fetched data
+        setAdmin(response.data); // Set the admin data to the state
+        setLoading(false); // Set loading state to false after data is fetched
       } catch (err) {
         console.error("Error fetching admin data:", err);
-        // Redirect to login if token is invalid or expired
-        navigate("/admin-login");
+        navigate("/admin-login"); // Redirect to login if the token is invalid or expired
       }
+    
+    
     };
+    
 
     fetchAdminData();
-  }, [navigate]); // Trigger effect on initial load and on navigate change
+  }, [navigate]); // This effect depends on navigation changes and will run whenever the page is loaded or token changes
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Remove token on logout
-    setAdmin(null); // Clear the admin data
-    setLoading(true); // Set loading to true until new token is fetched
+    setAdmin(null); // Clear admin data
+    setLoading(true); // Reset loading state
     navigate("/"); // Redirect to login page
   };
 
@@ -86,21 +92,20 @@ function Dashboard() {
         style={{ textDecoration: "none" }}
       >
         <Avatar
-          alt="Admin Profile"
-          src={`http://localhost:8000/${admin?.image || "default-avatar.png"}`}
-          sx={{
-            width: 90,
-            height: 90,
-            boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-            border: "2px solid white",
-          }}
-        />
-        <Typography
-          variant="h6"
-          sx={{ mt: 1, color: "white", fontWeight: "bold", textAlign: "center" }}
-        >
-          {admin?.firstname}
-        </Typography>
+  alt="Admin Profile"
+  src={`http://localhost:8000/${admin?.image || "default-avatar.png"}`}
+  sx={{
+    width: 90,
+    height: 90,
+    boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+    border: "2px solid white",
+  }}
+/>
+
+<Typography variant="h6" sx={{ mt: 1, color: "white", fontWeight: "bold", textAlign: "center" }}>
+  {admin?.firstname || "No Name"} {/* Ensure this is pulling the correct field */}
+</Typography>
+
       </Box>
 
       <Divider sx={{ backgroundColor: "rgba(255,255,255,0.3)" }} />

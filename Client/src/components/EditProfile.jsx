@@ -182,17 +182,30 @@ function EditProfile() {
             </div>
 
             <div className={styles.inputGroup}>
-              <label htmlFor="pin" className={styles.label}>
-                New PIN
-              </label>
-              <input
-                type="password"
-                id="pin"
-                name="pin"
-                value={pin}
-                onChange={(e) => setPin(e.target.value)}
-              />
-            </div>
+  <label htmlFor="pin" className={styles.label}>
+    New PIN
+  </label>
+  <input
+    type="password"
+    id="pin"
+    name="pin"
+    value={pin}
+    onChange={(e) => {
+      const value = e.target.value;
+      if (/^\d*$/.test(value) && value.length <= 6) { 
+        // Allow only numbers and limit to 6 digits
+        setPin(value);
+      }
+    }}
+    onBlur={(e) => {
+      if (e.target.value.length < 6) {
+        alert("PIN must be at least 6 digits long."); // Validation for minimum length
+      }
+    }}
+    maxLength={6} // Ensures maximum length is 6
+    inputMode="numeric" // Displays numeric keyboard on mobile devices
+  />
+</div>
 
             <button type="submit" className={styles.submitButton}>
               Save Changes

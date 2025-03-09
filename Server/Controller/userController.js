@@ -56,29 +56,34 @@ export const sendVerificationEmail = (email, verificationToken) => {
 
 
 export const registerUser = async (req, res) => {
-  const { firstname, lastname,email, pin, recaptchaToken } = req.body;
+  const { firstname, lastname, email, pin, recaptchaToken } = req.body;
   const image = req.file;
 
-  // Validate required fields
   if (!firstname || !lastname || !email || !pin || !recaptchaToken) {
-    return res.status(400).json({ message: "All fields (firstname, lastname, email, pin, recaptchaToken) are required." });
+    return res.status(400).json({
+      message: "All fields (firstname, lastname, email, pin, recaptchaToken) are required.",
+    });
   }
 
+  const session = await UserModel.startSession();
   try {
-    // Verify reCAPTCHA token with Google's API
+    session.startTransaction();
+
+    // Verify reCAPTCHA token
     const recaptchaVerificationResponse = await axios.post(
-      'https://www.google.com/recaptcha/api/siteverify',
+      "https://www.google.com/recaptcha/api/siteverify",
       null,
       {
         params: {
-          secret: process.env.RECAPTCHA_SECRET_KEY,  // Your secret key from Google
+          secret: process.env.RECAPTCHA_SECRET_KEY,
           response: recaptchaToken,
         },
+        timeout: 5000,
       }
     );
 
-    // Check if reCAPTCHA verification succeeded
     if (!recaptchaVerificationResponse.data.success) {
+      console.error("reCAPTCHA verification failed:", recaptchaVerificationResponse.data);
       return res.status(400).json({ message: "reCAPTCHA verification failed. Please try again." });
     }
 
@@ -89,37 +94,56 @@ export const registerUser = async (req, res) => {
     }
 
     // Hash the PIN
-  
     const hashedPin = await bcrypt.hash(pin, 10);
 
-    // Prepare the new user object
+    // Create the user object
     const newUser = new UserModel({
       firstname,
       lastname,
       email,
       pin: hashedPin,
       isAdmin: false,
-      isVerified: false,  // User is not verified by default
-      image: image ? image.path : null,  // Save the image path if an image is uploaded
+      isVerified: false,
+      image: image ? image.path : null,
     });
 
-    // Create the verification token
-    const verificationToken = createToken(newUser._id, newUser.email, '1h');
+    // Generate and attach a verification token
+    const verificationToken = createToken(newUser._id, newUser.email, "1h");
     newUser.verificationToken = verificationToken;
 
-    // Save the new user to the database
-    await newUser.save();
+    // Save the user to the database
+    await newUser.save({ session });
+    console.log("reCAPTCHA token (backend):", recaptchaToken);
 
-    // Send the verification email with the token
-    await sendVerificationEmail(email, verificationToken);
+    // Commit transaction 
+    await session.commitTransaction();
+    console.log("User registered successfully:", newUser.email);
 
-    // Respond with success message
+    // Send verification email
+    try {
+      await sendVerificationEmail(email, verificationToken);
+    } catch (emailError) {
+      console.error("Failed to send verification email:", emailError);
+      // Don't throw; allow the user to proceed with manual verification
+    }
+
     res.status(201).json({ message: "User registered successfully! Please verify your email." });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error during registration:", {
+      message: error.message,
+      stack: error.stack,
+      code: error.code,
+    });
+    await session.abortTransaction();
+    res.status(500).json({ message: "Internal server error. Please try again later." });
+  } finally {
+    session.endSession();
   }
 };
+
+
+
+
 
 // Email Verification
 export const verifyEmail = async (req, res) => {
